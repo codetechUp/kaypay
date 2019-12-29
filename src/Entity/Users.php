@@ -2,14 +2,16 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\UsersRepository")
  */
-class Users
+class Users Implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -40,8 +42,24 @@ class Users
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Roles", inversedBy="users")
+     * @ApiSubresource(maxDepth=1)
      */
     private $role;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default" : false})
+     */
+    private $isActive;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $username;
+    public function __construct()
+    {;
+        $this->isActive=true;
+
+    }
 
     public function getId(): ?int
     {
@@ -104,6 +122,40 @@ class Users
     public function setRole(?Roles $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+    public function eraseCredentials(){
+
+    }
+    public function getSalt(){
+
+    }
+    public function getRoles()
+    {
+       /// return $this->role;
+       return array('ROLE_USER');
+    }
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
 
         return $this;
     }
