@@ -10,10 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-/**
+    /**
      * @Route("/api", name="api")
      */
 class ApiController extends AbstractController
@@ -24,34 +26,43 @@ class ApiController extends AbstractController
         $this->usersRepository = $usersRepository;
     }
     /**
-     * @Route("/register", name="register")
+     * @Route("/register", name="register", methods={"POST"})
+     * @IsGranted({"ROLE_ADMIN_SYST"}, statusCode=403, message="Vous etes non autorisee,ADMIN SYSTEME seulement peut y acceder !")
      */
     public function register(Request $request,RolesRepository $reporoles,UserPasswordEncoderInterface $encode)
 {
-   
     $manager = $this->getDoctrine()->getManager();
     $user = new Users();
-    $role=$reporoles->find($request->get('role'));
-    $user->setEmail($request->get('email'))
+    if($request->get('role') !=1)
+    {
+        $role=$reporoles->find($request->get('role'));
+        $user->setEmail($request->get('email'))
         ->setPassword($encode->encodePassword($user,$request->get('password')))
-       ->setRole($role)
+        ->setRole($role)
         ->setPrenom($request->get('prenom'))
+        ->setUsername($request->get('username'))
         ->setNom($request->get('nom'));
         $manager->persist($user);
         $manager->flush();
-    return new Response(sprintf('User %s successfully created', $user->getUsername()));
+        return $this->json([
+            'message' =>"L'utilisateur ".$user->getUsername()." est cree.Il est de role ".$user->getRoles()[0]
+        ]);
+    }
+    if($request->get('role')==1){
+        throw new HttpException(401,'Vous ne pouvez pas creer un admin system');
+    }
 }
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/login", name="login", methods={"POST"})
      */
-    public function login():JsonResponse
+    public function login(Request $request)
     {
-        $user=$this->getUser();
-        return $this->json(array(
-            "username"=>$user->getEmail(),
-            "roles"=>$user->getRoles()
-        ));
-       
+        
+        $user = $this->getUser();
+        return $this->json([
+            'username' => $user->getUsername(),
+            'roles' => $user->getRoles()[0]
+        ]);
     }
 }

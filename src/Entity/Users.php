@@ -145,12 +145,14 @@ class Users Implements UserInterface
     }
     public function getRoles()
     {
-       /// return $this->role;
-       return array('ROLE_USER');
+        $roles[] = $this->role->getLibelle();
+       return array_unique($roles);
+       
+       
     }
     public function getUsername()
     {
-        return $this->email;
+        return $this->username;
     }
 
     public function setUsername(string $username): self
