@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
+
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
@@ -18,11 +21,16 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  *     },
  * itemOperations={
  *     "get"={
- *          "normalization_context"={"groups"={"get"}},}
+ *          "normalization_context"={"groups"={"get"}},},
+ *      "put"={"security"="is_granted('ROLE_ADMIN_SYST')", "security_message"="Seul ADMIN_SYST peut bloquer un user"}
+ * }
  *    
- *     })
+ *     )
  * @ORM\Entity(repositoryClass="App\Repository\UsersRepository")
+ * @UniqueEntity("username",message="L'identifiant doit etre Unique")
+ * @UniqueEntity("email",message="L'email doit etre Unique")
  */
+
 
  //AdvancedUserInterface etend UserInterface c'est pk on a pas besoin d'implentation UserInterface
 class Users Implements AdvancedUserInterface
@@ -53,6 +61,7 @@ class Users Implements AdvancedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=8,minMessage="Le mot de passe doit contenir au minimum 8 caracteres")
      */
     private $password;
 
