@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
     /**
      * @Route("/api", name="api")
@@ -27,7 +28,6 @@ class ApiController extends AbstractController
     }
     /**
      * @Route("/register", name="register", methods={"POST"})
-     * @IsGranted({"ROLE_ADMIN_SYST"}, statusCode=403, message="Vous etes non autorisee,ADMIN SYSTEME seulement peut y acceder !")
      */
     public function register(Request $request,RolesRepository $reporoles,UserPasswordEncoderInterface $encode)
 {
@@ -45,7 +45,8 @@ class ApiController extends AbstractController
         $manager->persist($user);
         $manager->flush();
         return $this->json([
-            'message' =>"L'utilisateur ".$user->getUsername()." est cree.Il est de role ".$user->getRoles()[0]
+            'status' => 201,
+            'message' => 'L\'utilisateur a été créé'
         ]);
     }
     if($request->get('role')==1){
@@ -56,13 +57,12 @@ class ApiController extends AbstractController
     /**
      * @Route("/login", name="login", methods={"POST"})
      */
-    public function login(Request $request)
+    public function login(Request $request,TokenStorageInterface $tokenStorage)
     {
-        
-        $user = $this->getUser();
+        $user=$tokenStorage->getToken()->getUser();
         return $this->json([
-            'username' => $user->getUsername(),
-            'roles' => $user->getRoles()[0]
+            'username' => $user
+            
         ]);
     }
 }

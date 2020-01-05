@@ -5,13 +5,27 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * collectionOperations={
+ *         "get"={
+ *          "normalization_context"={"groups"={"get"}},},
+ *         "post"={"security"="is_granted('ROLE_ADMIN_SYST')", "security_message"="Seul ADMIN_SYST peut creer un user"}
+ *     },
+ * itemOperations={
+ *     "get"={
+ *          "normalization_context"={"groups"={"get"}},}
+ *    
+ *     })
  * @ORM\Entity(repositoryClass="App\Repository\UsersRepository")
  */
-class Users Implements UserInterface
+
+ //AdvancedUserInterface etend UserInterface c'est pk on a pas besoin d'implentation UserInterface
+class Users Implements AdvancedUserInterface
 {
     /**
      * @ORM\Id()
@@ -22,11 +36,13 @@ class Users Implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("get")
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("get")
      */
     private $nom;
 
@@ -42,17 +58,17 @@ class Users Implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Roles", inversedBy="users")
-     * @ApiSubresource(maxDepth=1)
      */
     private $role;
 
     /**
-     * @ORM\Column(type="boolean", options={"default" : false})
+     * @ORM\Column(type="boolean")
      */
     private $isActive;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("get")
      */
     private $username;
     public function __construct()
@@ -160,5 +176,24 @@ class Users Implements UserInterface
         $this->username = $username;
 
         return $this;
+    }
+    // les fonction abstraites AdvancedUserInterface
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+    public function isEnabled()
+    {
+        return $this->isActive;
     }
 }
