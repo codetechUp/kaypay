@@ -17,12 +17,13 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * collectionOperations={
  *         "get"={
  *          "normalization_context"={"groups"={"get"}},},
- *         "post"={"security"="is_granted('ROLE_ADMIN_SYST')", "security_message"="Seul ADMIN_SYST peut creer un user"}
+ *         "post"={"security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN'])", "security_message"="Seul ADMIN_SYST peut creer un user"}
  *     },
  * itemOperations={
  *     "get"={
- *          "normalization_context"={"groups"={"get"}},},
- *      "put"={"security"="is_granted('ROLE_ADMIN_SYST')", "security_message"="Seul ADMIN_SYST peut bloquer un user"}
+ *          "normalization_context"={"groups"={"get"}},
+ * "security"="is_granted('ROLE_ADMIN_SYST')"},
+ *      "put"={"security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN'])", "security_message"="Seul ADMIN_SYST peut bloquer un user"}
  * }
  *    
  *     )
@@ -56,6 +57,9 @@ class Users Implements AdvancedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(
+     *     message = "Cet email '{{ value }}' n\'est pas valide."
+     * )
      */
     private $email;
 
@@ -67,6 +71,7 @@ class Users Implements AdvancedUserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Roles", inversedBy="users")
+     * @ApiSubresource()
      */
     private $role;
 
