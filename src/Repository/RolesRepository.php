@@ -18,6 +18,16 @@ class RolesRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Roles::class);
     }
+    public function findByLibelle($value)
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.libelle = :val')
+            ->setParameter('val', $value)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     // /**
     //  * @return Roles[] Returns an array of Roles objects
