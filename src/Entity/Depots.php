@@ -11,6 +11,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DepotsRepository")
  * @ApiResource(
+ * * collectionOperations={
+ *         "get",
+ *         "post"={"security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN','ROLE_CAISSIER'])", "security_message"="Seul ADMIN_SYST peut creer un user",
+ * "controller"=DepotController::class}
+ *     },
+ * itemOperations={
+ *     "get"}
  * )
  */
 class Depots

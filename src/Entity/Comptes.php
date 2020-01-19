@@ -73,6 +73,12 @@ class Comptes
      */
     private $depots;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Users")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $userCreator;
+
     public function __construct()
     {
         $this->depots = new ArrayCollection();
@@ -159,6 +165,18 @@ class Comptes
                 $depot->setCompte(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUserCreator(): ?Users
+    {
+        return $this->userCreator;
+    }
+
+    public function setUserCreator(?Users $userCreator): self
+    {
+        $this->userCreator = $userCreator;
 
         return $this;
     }

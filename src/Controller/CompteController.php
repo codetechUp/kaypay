@@ -22,23 +22,31 @@ class CompteController
         $this->userPasswordEncoder = $userPasswordEncoder;
         $this->repo=$repo;
     }
-    public function __invoke(Comptes $data,UsersRepository $use):Comptes
+    public function __invoke(Comptes $data,UsersRepository $use,TokenStorageInterface $tokenStorage):Comptes
     {
         
+        //usercreator
+        $userCreator=$this->tokenStorage->getToken()->getUser();
         //password du user partenaire
-        
         $userPass=$data->getPartenaire()->getUser()->getPassword();
         //le user
         $user=$data->getPartenaire()->getUser();
+        //id partenaire 
+        $iduser=$data->getPartenaire()->getId();
         //montant depot
         $montant=($data->getDepots()[count($data->getDepots())-1]->getMontant());
         //date creation
         $date=date_format($data->getCreatAt(),"Yms");
         $id=$use->getLast()[0]->getId()+1;
+       if($iduser == null){
         $user->setPassword($this->userPasswordEncoder->encodePassword($user, $userPass));
         $user->setRole($this->repo->findByLibelle("ROLE_PARTENAIRE")[0]);
+        
+       }
         if($this->algo->validMontant($montant)){
+            dd($this->algo->validMontant($montant));
             $data->setSolde($montant);
+            $data->setUserCreator($userCreator);
             $data->setNumero($date.$id);
             return $data;
         }else{

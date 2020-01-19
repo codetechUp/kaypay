@@ -7,11 +7,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class Algorithm{
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $userPasswordEncoder)
-    {
-        $this->userPasswordEncoder = $userPasswordEncoder;
-        $this->entityManager = $entityManager;
-    }
+   
     public function isAuthorised($userRoles,$usersModi){
         if($userRoles=="ROLE_ADMIN_SYST"){
             if($usersModi ==  "ROLE_ADMIN_SYST"){
@@ -43,7 +39,7 @@ class Algorithm{
     public function isImage($file)
     {
         $extension=$file->guessExtension();
-        if( ($extension === "png") ||( $extension === "jpeg") || ($extension === "pjpeg") || ($extension === "gif") )
+        if( ($extension === "png") ||( $extension === "jpeg") || ($extension === "pjpeg")  || ( $extension === "jpg") )
         {
             return true;
         }else{
