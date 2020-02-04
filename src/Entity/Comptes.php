@@ -18,7 +18,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ComptesRepository")
  * @ApiResource(
- * denormalizationContext={"groups"={"post"}},
+ * normalizationContext={"groups"={"post"}},
  * collectionOperations={
  *         "get"={
  *          "normalization_context"={"groups"={"get"}},},
@@ -74,15 +74,24 @@ class Comptes
     private $depots;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Users")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Users", inversedBy="comptes")
      * @ORM\JoinColumn(nullable=false)
      */
     private $userCreator;
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Affectations", mappedBy="comptes")
+     */
+    private $affectations;
+
 
     public function __construct()
     {
+       
         $this->depots = new ArrayCollection();
         $this->creatAt=  new \DateTime();
+        $this->affectations = new ArrayCollection();
+       
+        
     }
 
     public function getId(): ?int
@@ -180,4 +189,39 @@ class Comptes
 
         return $this;
     }
+
+    /**
+     * @return Collection|Affectations[]
+     */
+    public function getAffectations(): Collection
+    {
+        return $this->affectations;
+    }
+
+    public function addAffectation(Affectations $affectation): self
+    {
+        if (!$this->affectations->contains($affectation)) {
+            $this->affectations[] = $affectation;
+            $affectation->setComptes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAffectation(Affectations $affectation): self
+    {
+        if ($this->affectations->contains($affectation)) {
+            $this->affectations->removeElement($affectation);
+            // set the owning side to null (unless already changed)
+            if ($affectation->getComptes() === $this) {
+                $affectation->setComptes(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
+    
+   
 }

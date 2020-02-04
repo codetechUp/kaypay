@@ -35,22 +35,29 @@ class Partenaire
      */
     private $rc;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Users", inversedBy="partenaire", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     * @Assert\Valid()
-     * @Groups("post")
-     */
-    private $user;
+   
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comptes", mappedBy="partenaire")
+     * @Groups("post")
      */
     private $comptes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Users",cascade="persist", mappedBy="partenaire")
+     * @Groups("post")
+     */
+    private $users;
+
+   
+
+   
     public function __construct()
     {
         $this->comptes = new ArrayCollection();
+        $this->users = new ArrayCollection();
+       
+        
         
     }
 
@@ -79,18 +86,6 @@ class Partenaire
     public function setRc(string $rc): self
     {
         $this->rc = $rc;
-
-        return $this;
-    }
-
-    public function getUser(): ?Users
-    {
-        return $this->user;
-    }
-
-    public function setUser(Users $user): self
-    {
-        $this->user = $user;
 
         return $this;
     }
@@ -125,4 +120,36 @@ class Partenaire
 
         return $this;
     }
+
+    /**
+     * @return Collection|Users[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(Users $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setPartenaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(Users $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            // set the owning side to null (unless already changed)
+            if ($user->getPartenaire() === $this) {
+                $user->setPartenaire(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

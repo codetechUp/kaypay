@@ -24,6 +24,18 @@ class Algorithm{
             }else{
                 return true;
             }
+       
+        }
+
+
+        if($userRoles=="ROLE_PARTENAIRE"){  
+            if($usersModi ==  "ROLE_ADMIN_SYST" || $usersModi ==  "ROLE_ADMIN" || $usersModi ==  "ROLE_PARTENAIRE" ){
+                return false;
+
+            }else{
+                return true;
+            }
+       
         }
     }
 
@@ -49,5 +61,7 @@ class Algorithm{
     public function genereNum($date,$id){
         return   date_format($date,"Ymd").$id;
 
+    }
+    public function PartExist($id){
     }
 }

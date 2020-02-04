@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -37,10 +38,13 @@ class ExceptionSubscriber implements EventSubscriberInterface
             $event->setResponse($response);
         }
     }
+    
     public static function getSubscribedEvents()
     {
+        
         return [
             'kernel.exception' => 'onKernelException',
         ];
     }
+    
 }
