@@ -16,6 +16,6 @@ class AffecteController
 
     public function __invoke(Affectations $data):Affectations
     {
-       dd($data);
+       return $data;
     }
 }

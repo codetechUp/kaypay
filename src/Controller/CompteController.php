@@ -25,7 +25,8 @@ class CompteController
     }
     public function __invoke(Comptes $data,UsersRepository $use,TokenStorageInterface $tokenStorage):Comptes
     {
-        
+      //  dd($data);
+       // dd($this->algo->random());
         //usercreator
         $userCreator=$this->tokenStorage->getToken()->getUser();
         //password du user partenaire

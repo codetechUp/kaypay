@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\AffecteController;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -12,12 +13,9 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
  * @ORM\Entity(repositoryClass="App\Repository\AffectationsRepository")
  * @ApiResource(
  * collectionOperations={
- *         "get",
  *         "post"={"security"="is_granted(['ROLE_PARTENAIRE','ROLE_PADMIN'])", "security_message"="Acces non autorisé",
  * "controller"=AffecteController::class}
- *     },
- * itemOperations={
- *     "get"}
+ *     }
  * )
  */
 class Affectations
@@ -50,6 +48,11 @@ class Affectations
      * @ORM\ManyToOne(targetEntity="App\Entity\Comptes", inversedBy="affectations")
      */
     private $comptes;
+
+
+    public function __construct(){
+        $this->dateDebut = new DateTime();
+    }
 
     public function getId(): ?int
     {

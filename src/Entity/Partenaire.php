@@ -12,7 +12,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PartenaireRepository")
- * @ApiResource()
+ * @ApiResource(
+ *  denormalizationContext={"groups"={"post"}}
+ * )
  */
 class Partenaire
 {
@@ -25,13 +27,13 @@ class Partenaire
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("post")
+     * @Groups({"post","read"})
      */
     private $ninea;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("post")
+     * @Groups({"post","read"})
      */
     private $rc;
 
@@ -39,13 +41,12 @@ class Partenaire
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comptes", mappedBy="partenaire")
-     * @Groups("post")
      */
     private $comptes;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Users",cascade="persist", mappedBy="partenaire")
-     * @Groups("post")
+     * @Groups({"post","read"})
      */
     private $users;
 

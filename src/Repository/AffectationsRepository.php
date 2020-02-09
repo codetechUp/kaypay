@@ -18,6 +18,17 @@ class AffectationsRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Affectations::class);
     }
+    public function findCompteAffectTo($value)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.users = :val')
+            ->setParameter('val', $value)
+            ->orderBy('a.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     // /**
     //  * @return Affectations[] Returns an array of Affectations objects

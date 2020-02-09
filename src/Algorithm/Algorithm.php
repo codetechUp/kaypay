@@ -1,12 +1,28 @@
 <?php
 namespace App\Algorithm;
 
+use App\Repository\TarifsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class Algorithm{
 
+    public function __construct(TarifsRepository $tRepo){
+        $this->tRepo=$tRepo;
+
+    }
+    public function getFrais($montant){
+        $tarifs=$this->tRepo->findAll();
+        foreach ($tarifs as $tarif) {
+            $frais=$tarif->getFrais();
+            $borneInf=$tarif->getBorneInf();
+            $borneSup=$tarif->getBorneSup();
+            if(( $borneInf <= $montant ) && ($montant<= $borneSup) ){
+               return  $frais ;
+            }
+        }
+    }
    
     public function isAuthorised($userRoles,$usersModi){
         if($userRoles=="ROLE_ADMIN_SYST"){
@@ -64,4 +80,7 @@ class Algorithm{
     }
     public function PartExist($id){
     }
+    function random() {
+        return strval(rand(1,1999099999));
+           }
 }

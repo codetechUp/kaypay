@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\ImageController;
 use App\Controller\CompteController;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
@@ -11,6 +12,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
@@ -18,18 +20,16 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ComptesRepository")
  * @ApiResource(
- * normalizationContext={"groups"={"post"}},
- * collectionOperations={
- *         "get"={
- *          "normalization_context"={"groups"={"get"}},},
+ * normalizationContext={"groups"={"read"}},
+ *  denormalizationContext={"groups"={"post"}},
+ *  collectionOperations={
  *         "post"={
  * "security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN'])", "security_message"="Seul ADMIN_SYST peut creer un user",
- * "controller"=CompteController::class ,}
+ * "controller"=CompteController::class }
  *     },
  * itemOperations={
- *     "get"={ 
- * "security"="is_granted('ROLE_ADMIN_SYST')"},
- *      "put"={"security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN'])", "security_message"="Seul ADMIN_SYST peut bloquer un user"}
+ *      "GET"={
+ * "security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN'])"}
  * }  )
  */
 class Comptes
@@ -50,7 +50,7 @@ class Comptes
     /**
      * @ORM\Column(type="integer")
      * @ApiFilter(SearchFilter::class)
-     * @Groups("post")
+     * @Groups({"post","write"})
      */
     private $numero;
 
@@ -63,13 +63,13 @@ class Comptes
      * @ORM\ManyToOne(cascade="persist",targetEntity="App\Entity\Partenaire", inversedBy="comptes")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Valid()
-     * @Groups("post")
+     * @Groups({"post","read"})
      */
     private $partenaire;
 
     /**
      * @ORM\OneToMany(cascade="persist",targetEntity="App\Entity\Depots", mappedBy="compte")
-     * @Groups("post")
+     * @Groups({"post","read"})
      */
     private $depots;
 
@@ -83,6 +83,11 @@ class Comptes
      */
     private $affectations;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transactions", mappedBy="compteEmetteur")
+     */
+    private $transactions;
+
 
     public function __construct()
     {
@@ -90,6 +95,7 @@ class Comptes
         $this->depots = new ArrayCollection();
         $this->creatAt=  new \DateTime();
         $this->affectations = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
        
         
     }
@@ -215,6 +221,37 @@ class Comptes
             // set the owning side to null (unless already changed)
             if ($affectation->getComptes() === $this) {
                 $affectation->setComptes(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transactions[]
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transactions $transaction): self
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions[] = $transaction;
+            $transaction->setCompteEmetteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transactions $transaction): self
+    {
+        if ($this->transactions->contains($transaction)) {
+            $this->transactions->removeElement($transaction);
+            // set the owning side to null (unless already changed)
+            if ($transaction->getCompteEmetteur() === $this) {
+                $transaction->setCompteEmetteur(null);
             }
         }
 

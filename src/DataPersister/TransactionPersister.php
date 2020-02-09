@@ -4,6 +4,7 @@ namespace App\DataPersister;
 use App\Entity\Users;
 use App\Entity\Comptes;
 use App\Algorithm\Algorithm;
+use App\Entity\Transactions;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -12,7 +13,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
-class UserDataPersister implements DataPersisterInterface
+class TransactionPersister implements DataPersisterInterface
 {
     
     
@@ -24,7 +25,7 @@ class UserDataPersister implements DataPersisterInterface
     }
     public function supports($data): bool
     {
-        return $data instanceof Users;
+        return $data instanceof Transactions;
        
         // TODO: Implement supports() method.
     }
@@ -33,7 +34,6 @@ class UserDataPersister implements DataPersisterInterface
         
                 $this->entityManager->persist($data);
                 $this->entityManager->flush();
-               
     }
     public function remove($data)
     {
