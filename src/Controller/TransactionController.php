@@ -23,7 +23,7 @@ class  TransactionController{
      $userEmetteur=$tokenStorage->getToken()->getUser();
     //user emetteur Role
     $role=$userEmetteur->getRoles()[0];
-    if($role= "ROLE_PUSER"){
+    if($role == "ROLE_PUSER"){
         $compteEmetteur=$repo->findCompteAffectTo($userEmetteur)[0]->getComptes();
         $data->setCompteEmetteur($compteEmetteur);
     }

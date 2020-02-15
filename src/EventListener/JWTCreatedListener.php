@@ -48,7 +48,7 @@ class JWTCreatedListener
             }
             
         }
-        if($this->aff->findCompteAffectTo($user) !=[]){
+        if($this->aff->findCompteAffectTo($user) != []){
             $aujourd = date('Y-m-d');
         $aujourd=date('Y-m-d', strtotime($aujourd));
         //echo $paymentDate; // echos today!
@@ -61,6 +61,9 @@ class JWTCreatedListener
         if (!(($aujourd >= $debut) && ($aujourd <= $fin))){
            throw new Exception("Vous etes pas associé à aucun compte ");
         }
+        /*else{
+            throw new Exception("Votre Compte utilsateur n'est affecté à aucun compte");
+         }*/
         }
       
         

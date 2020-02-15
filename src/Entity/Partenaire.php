@@ -12,9 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PartenaireRepository")
- * @ApiResource(
- *  denormalizationContext={"groups"={"post"}}
- * )
+ * @ApiResource()
  */
 class Partenaire
 {

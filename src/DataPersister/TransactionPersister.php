@@ -34,6 +34,7 @@ class TransactionPersister implements DataPersisterInterface
         
                 $this->entityManager->persist($data);
                 $this->entityManager->flush();
+                return $data->geneRecu();
     }
     public function remove($data)
     {

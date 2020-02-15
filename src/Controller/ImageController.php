@@ -14,12 +14,16 @@ final class ImageController extends AbstractController
 {
 
     
-    public function __invoke(Users $user,Request $request)
+    public function __invoke(Users $user)
 {
+    
     // Fetch content and determine boundary
 $raw_data = file_get_contents('php://input');
 //dd($raw_data);
 $boundary = substr($raw_data, 0, strpos($raw_data, "\r\n"));
+if($boundary==""){
+    return $user;
+}
 
 // Fetch each part
 $parts = array_slice(explode($boundary, $raw_data), 1);
@@ -55,7 +59,7 @@ foreach ($parts as $part) {
     switch ($name) {
         // this is a file upload
         case 'userfile':
-             dd(file_put_contents($filename, $body));
+             (file_put_contents($filename, $body));
              break;
 
         // default for all other files is to populate $data
@@ -63,7 +67,7 @@ foreach ($parts as $part) {
              $data[$name] = substr($body, 0, strlen($body) - 2);
              break;
     } 
-    $user->setImage(base64_encode($data["file"]));
+    $user->setImage(base64_encode($data["image"]));
     return $user;
    
     

@@ -12,6 +12,11 @@ class Algorithm{
         $this->tRepo=$tRepo;
 
     }
+    public function getDate($data){
+        $a=explode("/",$data);
+        return $data[2]."-".$data[1]."-".$data[0];
+
+    }
     public function getFrais($montant){
         $tarifs=$this->tRepo->findAll();
         foreach ($tarifs as $tarif) {

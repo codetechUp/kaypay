@@ -35,13 +35,15 @@ class ComptePersister implements DataPersisterInterface
     }
     public function persist($data)
     {
-        
-        if($data->getPartenaire()->getId() == null){
-            $v=1;
-        }
+        //Je declare v pour v ne soit pas nul
+               $v=2;
+                if($data->getPartenaire()->getId() == null){
+                        $v=1;
+                    }
                 $this->entityManager->persist($data);
                 $this->entityManager->flush();
-              if($v==1){
+                //si v=1 c-a-d Nouveau Partenaire
+              if($v == 1){
                 $contrats= new Contrats();
                 $contrats->setPartenaire($data->getPartenaire());
                 $contrats->setDate(new DateTime());

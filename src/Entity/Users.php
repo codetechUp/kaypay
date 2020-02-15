@@ -17,8 +17,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-
 /**
  * @ApiResource(
  * collectionOperations={
@@ -30,6 +28,12 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  *itemOperations={
  *         "get",
  *         "put"={
+ * "method"="put",
+ * "normalization_context"={"groups"={"get"}},
+ * },
+ *         "put_image"={
+ * * "method"="put",
+ *         "path"="/users/{id}/image",
  *             "controller"=ImageController::class,
  *             "deserialize"=false,
  *             "openapi_context"={
@@ -49,7 +53,8 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  *                     }
  *                 }
  *             }
- *         }
+ *         },
+ *  
  *             
  *     },
  *    
@@ -62,8 +67,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
  //AdvancedUserInterface etend UserInterface c'est pk on a pas besoin d'implentation UserInterface
 class Users Implements UserInterface
-                                                               
-                                                               {
+                         {
                                                                    /**
                                                                     * @ORM\Id()
                                                                     * @ORM\GeneratedValue()
@@ -106,6 +110,7 @@ class Users Implements UserInterface
                                                                    private $role;
                                                                    /**
                                                                     * @ORM\Column(type="boolean")
+                                                                    * @Groups({"post","get"})
                                                                     */
                                                                    private $isActive;
                                                                

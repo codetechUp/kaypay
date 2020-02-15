@@ -18,6 +18,15 @@ class ComptesRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Comptes::class);
     }
+    public function getAccountPart($id){
+        return $this->createQueryBuilder('c')
+        ->andWhere('c.partenaire = :id')
+        ->select('c.id')
+        ->orderBy('c.id', 'ASC')
+        ->setParameter('id', $id)
+        ->getQuery()
+        ->getResult();
+    }
 
     // /**
     //  * @return Comptes[] Returns an array of Comptes objects

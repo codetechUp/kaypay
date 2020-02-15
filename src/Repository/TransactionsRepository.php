@@ -18,24 +18,86 @@ class TransactionsRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Transactions::class);
     }
-
-    // /**
-    //  * @return Transactions[] Returns an array of Transactions objects
-    //  */
-    /*
-    public function findByExampleField($value)
+   
+    public function getPartPart($id,$debut=[],$fin=[])
     {
+        if(empty($debut)){
+            $data1=$this->createQueryBuilder('t')
+            ->select('t.id','t.dateEnvoi','t.partPdepot')
+            ->Where('t.compteEmetteur = :id ')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult()
+        ;
+        $data2=$this->createQueryBuilder('t')
+            ->select('t.id','t.dateEnvoi','t.pRetrait')
+            ->Where('t.compteRecept = :id ')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult()
+        ;
+        return array_merge($data1,$data2);
+
+    }else{
+        $data1=$this->createQueryBuilder('t')
+        ->select('t.id','t.dateEnvoi','t.partPdepot')
+        ->Where('t.compteEmetteur = :id ')
+        ->andWhere('t.dateEnvoi >= :debut ')
+        ->andWhere('t.dateEnvoi <= :fin ')
+        ->setParameter('id', $id)
+        ->setParameter('fin', $fin)
+        ->setParameter('debut', $debut)
+        ->getQuery()
+        ->getResult()
+    ;
+    $data2=$this->createQueryBuilder('t')
+        ->select('t.id','t.dateEnvoi','t.pRetrait')
+        ->Where('t.compteRecept = :id ')
+        ->andWhere('t.dateEnvoi >= :debut ')
+        ->andWhere('t.dateEnvoi <= :fin ')
+        ->setParameter('id', $id)
+        ->setParameter('fin', $fin)
+        ->setParameter('debut', $debut)
+        ->getQuery()
+        ->getResult()
+    ;
+    return array_merge($data1,$data2);
+    }
+    }
+
+    public function findPart($a,$debut=[],$fin=[])
+    {
+        if(empty($debut)){
+            return $this->createQueryBuilder('t')
+            ->select('t.id','t.part'.ucfirst($a),'t.dateEnvoi')
+            ->getQuery()
+            ->getResult()
+        ;
+    }else{
         return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
+        ->Where('t.dateEnvoi >= :debut ')
+        ->andWhere('t.dateEnvoi <= :fin ')
+        ->select('t.id','t.part'.ucfirst($a),'t.dateEnvoi')
+        ->setParameter('fin', $fin)
+        ->setParameter('debut', $debut)
+        ->getQuery()
+        ->getResult();
+    }
+
+
+
+    }
+       
+    /*{
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
+            ->orderBy('p.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
-    }
-    */
-
+    }*/
     /*
     public function findOneBySomeField($value): ?Transactions
     {

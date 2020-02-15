@@ -3,6 +3,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\PartsController;
 use App\Controller\RetraitController;
 use App\Controller\TransactionController;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -12,7 +13,22 @@ use Symfony\Component\Validator\Constraints\Date;
  * @ORM\Entity(repositoryClass="App\Repository\TransactionsRepository")
  * @ApiResource(
  * collectionOperations={
- * "get",
+ * "get"={"method"="GET"},
+ *  "get_etat"={
+ * "method"="get",
+ * "path"="/transactions/etat",
+ * "controller"=PartsController::class
+ *     },
+ *   "get_agence"={
+ * "method"="get",
+ * "path"="/transactions/agence",
+ * "controller"=PartsController::class
+ *     },
+ *   "get_partenaire"={
+ * "method"="get",
+ * "path"="/transactions/partenaire/{id}",
+ * "controller"=PartsController::class
+ *     },
  *         "post"={"security"="is_granted(['ROLE_PARTENAIRE','ROLE_PADMIN','ROLE_PUSER'])", "security_message"="Acces non autorisé",
  * "controller"=TransactionController::class}
  *     },
@@ -407,6 +423,16 @@ class Transactions
         $this->isActive = $isActive;
 
         return $this;
+    }
+    public function geneRecu(){
+        $recu=[
+            "Prenom Nom Emetteur" => $data->getPrenomClientEmetteur()." ".$data->getNomClientEmetteur(),
+            "Montant" => $data->getMontant(),
+            "Prenom Nom Recepteur" => $data->getPrenomCliRecepteur()." ".$data->nomClRecept(),
+            "Code Retrait" => $data->getCode()
+        ];
+        $response= JsonResponse();
+        return $response;
     }
 
    
