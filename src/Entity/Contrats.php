@@ -80,7 +80,7 @@ class Contrats
     }
     public function genContrat($data){
          $contrat = [
-            'Ninea Partenaire' => $data->getPartenaire()->getRc(),
+            'Registre de Commerce Partenaire' => $data->getPartenaire()->getRc(),
             'Ninea'=> $data->getPartenaire()->getNinea(),
             'Date de Creation' => $data->getDate(),
             "Termes" => $data->getTermes()

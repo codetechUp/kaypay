@@ -4,6 +4,7 @@ namespace App\Entity;
 
 
 use App\Entity\Images;
+use App\Controller\UserLogged;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\UserController;
 use App\Controller\ImageController;
@@ -22,6 +23,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * collectionOperations={
  *         "get"={
  *          "normalization_context"={"groups"={"get"}},},
+ *          "get_userlogged"={
+ *          "method"="get",
+ *          "path"="/users/logged",
+ *           "controller"=UserLogged::class},
  *         "post"={"security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN','ROLE_PARTENAIRE','ROLE_PADMIN'])", "security_message"="Acces non autorisé",
  * "controller"=UserController::class}
  *     },

@@ -72,13 +72,13 @@ class JWTCreatedListener
         // merge with existing event data
         //ca permet de voir le mot de passe si on inspecte le token sur jwt.io
 
-        /**$payload = array_merge(
+        $payload = array_merge(
             $event->getData(),
             [
-                'password' => $user->getPassword()
+                'id' => $user->getId()
             ]
         );
 
-        $event->setData($payload);*/
+        $event->setData($payload);
     }
 }

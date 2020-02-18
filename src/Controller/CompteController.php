@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Depots;
@@ -20,7 +19,6 @@ class CompteController
     {
         $this->tokenStorage = $tokenStorage;
         $this->algo=$algo;
-        $this->userPasswordEncoder = $userPasswordEncoder;
         $this->repo=$repo;
     }
     public function __invoke(Comptes $data,UsersRepository $use,TokenStorageInterface $tokenStorage):Comptes
