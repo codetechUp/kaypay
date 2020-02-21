@@ -2,6 +2,7 @@
 namespace App\DataPersister;
 
 use App\Entity\Users;
+use App\Algorithm\Osms;
 use App\Entity\Comptes;
 use App\Algorithm\Algorithm;
 use App\Entity\Transactions;
@@ -31,9 +32,12 @@ class TransactionPersister implements DataPersisterInterface
     }
     public function persist($data)
     {
-        
+                $data->sendMessage($data);
+                dd($data);
                 $this->entityManager->persist($data);
                 $this->entityManager->flush();
+
+                
                 return $data->geneRecu();
     }
     public function remove($data)

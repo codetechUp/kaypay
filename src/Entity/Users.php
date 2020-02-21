@@ -8,6 +8,7 @@ use App\Controller\UserLogged;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\UserController;
 use App\Controller\ImageController;
+use App\Controller\getUserController;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -31,14 +32,17 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * "controller"=UserController::class}
  *     },
  *itemOperations={
- *         "get",
+ *         "get"={
+ * "controller"=getUserController::class
+ * },
  *         "put"={
  * "method"="put",
  * "normalization_context"={"groups"={"get"}},
  * },
  *         "put_image"={
- * * "method"="put",
- *         "path"="/users/{id}/image",
+ * * "method"="post",
+ * "normalization_context"={"groups"={"get"}},
+ *         "path"="/users/image/{id}",
  *             "controller"=ImageController::class,
  *             "deserialize"=false,
  *             "openapi_context"={
@@ -82,13 +86,13 @@ class Users Implements UserInterface
                                                                
                                                                    /**
                                                                     * @ORM\Column(type="string", length=255)
-                                                                    * @Groups({"post","read"})
+                                                                    * @Groups({"post","read","get"})
                                                                     */
                                                                    private $prenom;
                                                                
                                                                    /**
                                                                     * @ORM\Column(type="string", length=255)
-                                                                    * @Groups({"post","read"})
+                                                                    * @Groups({"post","read","get"})
                                                                     */
                                                                    private $nom;
                                                                

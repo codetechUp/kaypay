@@ -21,11 +21,10 @@ class CompteController
         $this->algo=$algo;
         $this->repo=$repo;
     }
-    public function __invoke(Comptes $data,UsersRepository $use,TokenStorageInterface $tokenStorage):Comptes
+    public function __invoke(Comptes $data,UsersRepository $use):Comptes
     {
-      //  dd($data);
-       // dd($this->algo->random());
-        //usercreator
+       
+        //usercreator le User qui s'est connecté
         $userCreator=$this->tokenStorage->getToken()->getUser();
         //password du user partenaire
         $userPass=$data->getPartenaire()->getUsers()[0]->getPassword();

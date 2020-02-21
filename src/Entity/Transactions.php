@@ -2,6 +2,7 @@
 namespace App\Entity;
 
 use DateTime;
+use App\Algorithm\Osms;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\PartsController;
 use App\Controller\RetraitController;
@@ -60,7 +61,7 @@ class Transactions
     private $prenomClientEmetteur;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
     private $TelClientEmetteur;
 
@@ -80,7 +81,7 @@ class Transactions
     private $prenomCliRecepteur;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
     private $telCliRecept;
 
@@ -433,6 +434,30 @@ class Transactions
         ];
         $response= JsonResponse();
         return $response;
+    }
+    public function sendMessage($data){
+        $message="Bienvenue dans KayPay Transfert"." ".$data->getPrenomClientEmetteur()." ".$data->getNomClientEmetteur()." ".
+        "Vous a envoyé"." ".$data->getMontant().
+        "Vous pouvez le retirer dans nos agences KayPay";
+        $config=array(
+            'clientId' =>'FAxUMbtARsEUcjyRbWNl1AZkvinP4i2p',
+            'clientSecret' =>'GkZOtMokJu8UHIdE'
+        );
+        
+$osms = new Osms($config);
+
+$osms->setVerifyPeerSSL(false);
+
+// retrieve an access token
+$response = $osms->getTokenFromConsumerKey();
+    
+if (!empty($response['access_token'])) {
+    $receiverAddress = 'tel:+221'.$data->getTelCliRecept();
+    ($osms->sendSMS( $receiverAddress, $message));
+} else {
+    // error
+}
+               
     }
 
    
