@@ -14,7 +14,7 @@ class  TransactionController{
      $this->algo=$algo;
     }
     public function __invoke(Transactions $data,TokenStorageInterface $tokenStorage,AffectationsRepository $repo){
- 
+
    //montant
     $montant=$data->getMontant();
     //les frais
@@ -41,7 +41,7 @@ class  TransactionController{
     $solde=$compteEmetteur->getSolde();
     if(($solde-$montant)>0){
         $newSolde=$compteEmetteur->setSolde($solde-$montant);
-        return $data;
+        return $data;   
     }else{
         throw new Exception("Le Solde de votre compte ne vous permet pas d'envoyer cette somme");
     }

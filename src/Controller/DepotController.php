@@ -15,9 +15,13 @@ class DepotController
 
     public function __invoke(Depots $data):Depots
     {
+        ###########################DECLARATION DES VARIABLES#####################
+       ##########################################################################
         $montant=$data->getMontant();
         $compte=$data->getCompte();
         $solde=$compte->getSolde();
+        ###########################TRAITEMENT DES DONNEES#####################
+       ##########################################################################
         if($montant > 0){
             $compte->setSolde($solde + $montant);
             return $data;

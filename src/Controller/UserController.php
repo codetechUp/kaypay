@@ -34,7 +34,7 @@ class UserController
         }
         //variable role user à modifier
         $usersModi=$data->getRoles()[0];
-        if($this->algo->isAuthorised($userRoles,$usersModi) == true){
+        if($this->algo->isAuthorised($userRoles,$usersModi)){
             $data->setPassword($this->userPasswordEncoder->encodePassword($data, $data->getPassword()));
             return $data;
         }else{

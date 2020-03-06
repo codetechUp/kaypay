@@ -4,6 +4,7 @@ namespace App\Entity;
 
 
 use App\Entity\Images;
+use App\Controller\getUsers;
 use App\Controller\UserLogged;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\UserController;
@@ -23,21 +24,18 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ApiResource(
  * collectionOperations={
  *         "get"={
+ * "security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN','ROLE_PARTENAIRE','ROLE_PADMIN'])", "security_message"="Acces non autorisé",
+ *         "controller"=getUsers::class,
  *          "normalization_context"={"groups"={"get"}},},
- *          "get_userlogged"={
- *          "method"="get",
- *          "path"="/users/logged",
- *           "controller"=UserLogged::class},
  *         "post"={"security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN','ROLE_PARTENAIRE','ROLE_PADMIN'])", "security_message"="Acces non autorisé",
  * "controller"=UserController::class}
  *     },
  *itemOperations={
  *         "get"={
- * "controller"=getUserController::class
- * },
+ * "controller"=getUserController::class  },
  *         "put"={
  * "method"="put",
- * "normalization_context"={"groups"={"get"}},
+ * "normalization_context"={"groups"={"read"}},
  * },
  *         "put_image"={
  * * "method"="post",
@@ -81,6 +79,7 @@ class Users Implements UserInterface
                                                                     * @ORM\Id()
                                                                     * @ORM\GeneratedValue()
                                                                     * @ORM\Column(type="integer")
+                                                                    * @Groups({"get"})
                                                                     */
                                                                    private $id;
                                                                
@@ -115,6 +114,7 @@ class Users Implements UserInterface
                                                                    /**
                                                                     * @ORM\ManyToOne(targetEntity="App\Entity\Roles", inversedBy="users")
                                                                     * @ApiSubresource()
+                                                                    *@Groups("get")
                                                                     */
                                                                    private $role;
                                                                    /**
@@ -125,7 +125,7 @@ class Users Implements UserInterface
                                                                
                                                                    /**
                                                                     * @ORM\Column(type="string", length=255)
-                                                                    * @Groups({"post","read"})
+                                                                    * @Groups({"post","read","get"})
                                                                     */
                                                                    private $username;
                                                                    /**
@@ -150,6 +150,7 @@ class Users Implements UserInterface
       
                                                                    /**
                                                                     * @ORM\Column(type="blob", nullable=true)
+                                                                    * @Groups("get")
                                                                     */
                                                                    private $image;
                                                 

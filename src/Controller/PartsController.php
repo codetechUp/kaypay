@@ -31,22 +31,40 @@ class PartsController
       $ex=explode("/",$url);
       //recupperation part agence ou etat 
       $urlUse=$ex[3];
+
+      ###########################TRAITEMENT DES DONNEES#####################
+       ##########################################################################
+
+       //si l utilistateur vas sur /partenaire/{id}
       if($urlUse == "partenaire"){
+        //si y'a des parametres dans url
         if(empty($_GET)){
-          $id=$ex[4];
+          //je recuppere l'id
+          $id=$ex[4];          
+          //je les comptes du partenaire
         $data=$this->compte->getAccountPart($id);
+        //j'initialise un tableau vide pour y mettre les donnees
         $donnees=array();
+        //Je parcours les Comptes du partenaire
         for($i=0;$i<count($data);$i++){
+          //Pour Chaque comptes
           foreach ($data as  $data) {
+            //je recuppere l'id du compte
             $id=$data["id"];
+            //je recuppere les part du partenaire pour ce compte
           $data=$this->trans->getPartPart($id);
+          //J'ajoute le part de cette compte dans mon tableau initialisé
+          //Et pour tout part du partenaire par compte seront assemblés dans un seul tableau
           $donnees=array_merge($donnees,$data);
           }
+          //Je Renvoie les donnees
+          
           return $donnees;
         }
         
         
         }else{
+          //si y a des parametres dans url
           $a=$ex[4];
           $id=explode("?",$a)[0];
           $urlUse=explode("?",$urlUse)[0];
@@ -60,7 +78,6 @@ class PartsController
             $data=$this->trans->getPartPart($id,$debut,$fin);
             $donnees=array_merge($donnees,$data);
             }
-            dd($donnees);
             return $donnees;
            
           }

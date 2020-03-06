@@ -22,7 +22,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
             $response = new JsonResponse($data);
             $event->setResponse($response);
         }
-      /*  elseif($exception instanceof HttpException) {
+       elseif($exception instanceof HttpException) {
             $data = [
                 'status' => $exception->getStatusCode(),
                 'message' => $exception->getMessage()
@@ -36,7 +36,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
             ];
             $response = new JsonResponse($data);
             $event->setResponse($response);
-        }*/
+        }
     }
     
     public static function getSubscribedEvents()

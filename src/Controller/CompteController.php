@@ -21,9 +21,12 @@ class CompteController
         $this->algo=$algo;
         $this->repo=$repo;
     }
-    public function __invoke(Comptes $data,UsersRepository $use):Comptes
+    public function __invoke(Comptes $data,UsersRepository $use,UserPasswordEncoderInterface $encoder):Comptes
     {
-       
+        
+       ###########################DECLARATION DES VARIABLES#####################
+       ##########################################################################
+
         //usercreator le User qui s'est connecté
         $userCreator=$this->tokenStorage->getToken()->getUser();
         //password du user partenaire
@@ -35,26 +38,29 @@ class CompteController
         //montant depot
         $montant=($data->getDepots()[count($data->getDepots())-1]->getMontant());
         //date creation
-        $date=date_format($data->getCreatAt(),"Yms");
+        $date=date_format($data->getCreatAt(),"Yds");
         $id=$use->getLast()[0]->getId()+1;
         //si  iduser n'existe pas c-a-d c'est un nouveau partenaire
+
+        ###########################TRAITEMENT DES DONNEES#####################
+       ##########################################################################
       
       
         if($iduser == null){
-        $user->setPassword($this->userPasswordEncoder->encodePassword($user, $userPass));
+        $user->setPassword($encoder->encodePassword($user,$userPass));
         $user->setRole($this->repo->findByLibelle("ROLE_PARTENAIRE")[0]);
-        
        }
         if($this->algo->validMontant($montant)){
+            
             $data->setSolde($montant);
             $data->setUserCreator($userCreator);
-            $data->setNumero($date.$id);
+            $data->setNumero($date);
+            
             return $data;
         }else{
             throw new Exception("Le montant doit etre superieur ou égale à 500.000");
         }
             
-        
       
     }
 }

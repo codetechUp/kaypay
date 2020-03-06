@@ -27,6 +27,50 @@ class UsersRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    public function getUsersForAS($role)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.role != :as')
+            ->setParameter('as', $role)
+            ->getQuery()
+            ->getResult()
+        ;
+    } public function getUsersForA($a,$b)
+    {
+        return $this->createQueryBuilder('u')
+        ->andWhere('u.role != :as AND u.role != :a')
+        ->setParameter('as',$a)
+            ->setParameter('a', $b)
+            ->getQuery()
+            ->getResult()
+        ;
+    }public function getUsersForP($p,$pu)
+    {
+        $a="ROLE_PUSER";
+        $b="ROLE_PADMIN";
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.role = :as OR u.role = :a')
+            
+            
+            ->setParameter('as',$a)
+            ->setParameter('a', $b)
+
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function getUsersForPA($p,$r)
+    {
+        return $this->createQueryBuilder('u')
+            ->Where('u.role = :as')
+            ->andWhere('u.partenaire  =:pa')
+            ->setParameter('pa', $p)
+            ->setParameter('as',$r)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 
     // /**
     //  * @return Users[] Returns an array of Users objects

@@ -16,7 +16,6 @@ class AffecteController
 
     public function __invoke(Affectations $data):Affectations
     {
-       
        return $data;
     }
 }

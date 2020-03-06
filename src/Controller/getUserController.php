@@ -11,13 +11,25 @@ class getUserController{
 $this->use=$use;
     }
     public function __invoke(){
-        //Recupperation de l'url
-      $url=$_SERVER["REQUEST_URI"];
-      //explose de l'url
-      $ex=explode("/",$url);
-      $id=$ex[3];
-        $data=$this->use->find($id);
+
+
+        ###########################DECLARATION DES VARIABLES#####################
+       ##########################################################################
+            //Recupperation de l'url
+            $url=$_SERVER["REQUEST_URI"];
+            //explose de l'url
+            $ex=explode("/",$url);
+            $id=$ex[3];
+            //Recupperation du user
+            $data=$this->use->find($id);
+
+        ###########################TRAITEMENT DE DONNEES#####################
+       ##########################################################################
+       if($data->getImage()){
         $data->setImage(base64_encode(stream_get_contents($data->getImage())));
+
+       }
+        
         return $data;
 
 

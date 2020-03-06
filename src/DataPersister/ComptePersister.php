@@ -20,7 +20,7 @@ class ComptePersister implements DataPersisterInterface
 {
     
     
-    public function __construct(TermesRepository $terme,EntityManagerInterface $entityManager,TokenStorageInterface $tokenStorage )
+    public function __construct(TermesRepository $terme,EntityManagerInterface $entityManager,TokenStorageInterface $tokenStorage)
     {       
         $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
@@ -47,8 +47,12 @@ class ComptePersister implements DataPersisterInterface
                 $contrats= new Contrats();
                 $contrats->setPartenaire($data->getPartenaire());
                 $contrats->setDate(new DateTime());
-                $contrats->setTermes($this->terme->findAll()[0]->getTermes());
-               return $contrats->genContrat($contrats);
+                $termes=$this->terme->findAll()[0]->getTermes();
+                $contrats->setTermes($termes);
+                $this->entityManager->persist($contrats);
+                $this->entityManager->flush();
+                $data=$data->getPartenaire();
+               return $contrats->genContrat($data,$termes);
               }
                 
     }

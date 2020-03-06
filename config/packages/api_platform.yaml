@@ -5,8 +5,3 @@ api_platform:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
-    eager_loading:
-        max_joins: 150
-    collection:
-        pagination:
-            items_per_page: 6

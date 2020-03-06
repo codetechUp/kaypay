@@ -34,9 +34,6 @@ class Contrats
      * @ORM\Column(type="date")
      */
     private $Date;
-
-   
-
     public function getId(): ?int
     {
         return $this->id;
@@ -78,13 +75,19 @@ class Contrats
         return $this;
        
     }
-    public function genContrat($data){
-         $contrat = [
-            'Registre de Commerce Partenaire' => $data->getPartenaire()->getRc(),
-            'Ninea'=> $data->getPartenaire()->getNinea(),
-            'Date de Creation' => $data->getDate(),
-            "Termes" => $data->getTermes()
-        ];
+    public function genContrat($data,$termes){
+        //le user partenaire
+        $user=$data->getUsers()[0];
+        //id  partenaire (on a id partenaire si le partenaire existe)
+        $r=$data->getRc();
+        $nin=$data->getNinea();
+        $no=$user->getPrenom()." ".$user->getNom();
+        $dat=new DateTime();
+        $dat=$dat->format("d-m-Y");
+        $word = ["rco", "ninea", "nom","date"];
+        $replace   = [$r, $nin, $no,$dat];
+
+        $contrat = str_replace($word, $replace, $termes);   
         $response = new JsonResponse($contrat);
         return $response;
     }

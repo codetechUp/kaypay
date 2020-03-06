@@ -34,7 +34,6 @@ class Depots
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"post","read"})
      */
     private $dateDepot;
 

@@ -23,14 +23,17 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * normalizationContext={"groups"={"read"}},
  *  denormalizationContext={"groups"={"post"}},
  *  collectionOperations={
+ * "get",
  *         "post"={
  * "security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN'])", "security_message"="Seul ADMIN_SYST peut creer un user",
  * "controller"=CompteController::class }
  *     },
  * itemOperations={
+ * "put",
  *      "GET"={
  * "security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN'])"}
  * }  )
+ * @ApiFilter(SearchFilter::class, properties={"partenaire.ninea": "exact"})
  */
 class Comptes
 {
@@ -43,7 +46,7 @@ class Comptes
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups("post")
+     * @Groups({"post","read"})
      */
     private $solde;
 

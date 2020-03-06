@@ -28,6 +28,50 @@ class RolesRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    public function roleForAS()
+    {
+        return $this->createQueryBuilder('r')
+        ->select('r.id','r.libelle')
+            ->Where('r.libelle != :as')
+            ->andWhere('r.libelle  !=:pa')
+            ->andWhere('r.libelle !=:pu')
+            ->setParameter('as', 'ROLE_ADMIN_SYST')
+            ->setParameter('pu', 'ROLE_PADMIN')
+            ->setParameter('pa','ROLE_PUSER')
+            ->getQuery()
+            ->getResult()
+        ;
+    }  public function roleForA()
+    {
+        return $this->createQueryBuilder('r')
+            ->select('r.id','r.libelle')
+            ->Where('r.libelle = :pa ')
+            ->setParameter('pa', 'ROLE_CAISSIER')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function roleForP()
+    {
+        return $this->createQueryBuilder('r')
+        ->select('r.id','r.libelle')
+            ->Where('r.libelle = :as OR r.libelle  = :pa')
+            ->setParameter('as', 'ROLE_PUSER')
+            ->setParameter('pa', 'ROLE_PADMIN')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function roleForPA()
+    {
+        return $this->createQueryBuilder('r')
+        ->select('r.id','r.libelle')
+            ->Where('r.libelle = :as ')
+            ->setParameter('as', 'ROLE_PUSER')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     // /**
     //  * @return Roles[] Returns an array of Roles objects
