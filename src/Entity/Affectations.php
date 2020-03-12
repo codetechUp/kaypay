@@ -51,7 +51,7 @@ class Affectations
 
 
     public function __construct(){
-        $this->dateDebut = new DateTime();
+        
     }
 
     public function getId(): ?int

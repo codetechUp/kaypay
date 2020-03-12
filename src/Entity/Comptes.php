@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\getAccountPart;
 use App\Controller\ImageController;
 use App\Controller\CompteController;
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -24,6 +25,10 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *  denormalizationContext={"groups"={"post"}},
  *  collectionOperations={
  * "get",
+ * "get_comptes"={
+ * "method":"get",
+ * "path":"/comptes/partenaire",
+ * "controller":getAccountPart::class},
  *         "post"={
  * "security"="is_granted(['ROLE_ADMIN_SYST','ROLE_ADMIN'])", "security_message"="Seul ADMIN_SYST peut creer un user",
  * "controller"=CompteController::class }
@@ -53,7 +58,7 @@ class Comptes
     /**
      * @ORM\Column(type="integer")
      * @ApiFilter(SearchFilter::class)
-     * @Groups({"post","write"})
+     * @Groups({"post","read"})
      */
     private $numero;
 

@@ -153,6 +153,11 @@ class Users Implements UserInterface
                                                                     * @Groups("get")
                                                                     */
                                                                    private $image;
+                                                                     /**
+                                                                   
+                                                                    * @Groups("get")
+                                                                    */    
+                                                                   private $roles;
                                                 
                                                                   
                                                                    
